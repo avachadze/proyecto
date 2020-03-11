@@ -1,4 +1,4 @@
-package main;
+package functions;
 
 import console.Console;
 
@@ -9,7 +9,7 @@ public class Main {
 		System.out.println("Bienvenido\n");
 		do {
 			System.out.println("1: Ver stock de vehículos\n2: Gestionar pintado\n3: Gestionar venta\n4: Gestionar compra\n5: Salir del programa");
-			System.out.println("Inserta la opción necesitada");
+			System.out.println("\nInserta la opción necesitada");
 			ask= Console.readInt();
 			switch (ask) {
 			case 1: stockDisplay(); break;
