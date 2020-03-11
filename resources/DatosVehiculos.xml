@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vehiculo>
+	<matricula></matricula>
+	<numBastidor></numBastidor>
+	<color></color>
+	<numAsientos></numAsientos>
+	<precio></precio>
+	<serie></serie>
+	<numPuertas></numPuertas>
+	<capacidadmaletero></capacidadmaletero>
+	<carga></carga>
+	<tipoMercancia></tipoMercancia>
+</vehiculo>
