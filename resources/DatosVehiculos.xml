@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<vehiculo>
-	<matricula></matricula>
-	<numBastidor></numBastidor>
-	<color></color>
-	<numAsientos></numAsientos>
-	<precio></precio>
-	<serie></serie>
-	<numPuertas></numPuertas>
-	<capacidadmaletero></capacidadmaletero>
-	<carga></carga>
-	<tipoMercancia></tipoMercancia>
-</vehiculo>
+<vehiculos>
+	<coches>
+		<coche>
+			<matricula>6155BXN</matricula>
+			<numBastidor>VF7S6NFXB57818400</numBastidor>
+			<color>Rojo</color>
+			<numAsientos>4</numAsientos>
+			<precio>14000</precio>
+			<serie>001</serie>
+			<añoFabricacion>2014</añoFabricacion>
+			<marca>Toyota</marca>
+			<modelo>Hilux</modelo>
+			<numPuertas>5</numPuertas>
+			<capacidadMaletero>150</capacidadMaletero>
+		</coche>
+	</coches>
+	<camiones>
+		<camion>
+			<matricula>6155BXN</matricula>
+			<numBastidor>VF7S6NFXB57818400</numBastidor>
+			<color>Azul</color>
+			<numAsientos>4</numAsientos>
+			<precio>14000</precio>
+			<serie>001</serie>
+			<añoFabricacion>2014</añoFabricacion>
+			<marca>Scania</marca>
+			<modelo>S730V8</modelo>
+			<carga>350</carga>
+			<tipoMercarcia>G</tipoMercarcia>
+		</camion>
+	</camiones>
+</vehiculos>
