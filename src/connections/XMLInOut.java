@@ -45,7 +45,7 @@ public class XMLInOut {
 		Coche coche= null;
 		Camion camion= null;
 		try {
-			File archivo= new File("/Proyecto/Java_Workspace/Concesionario/resources/DatosVehiculos.xml");
+			File archivo= new File("/Users/charli/Desktop/carpetos y exes/eclipse/provisional/resources/DatosVehiculos.xml");
 			DocumentBuilderFactory dbf= DocumentBuilderFactory.newInstance();
 			DocumentBuilder db= dbf.newDocumentBuilder();
 			Document documento= db.parse(archivo);
@@ -56,7 +56,7 @@ public class XMLInOut {
 			NodeList listaCamiones= (NodeList)listaVehiculos.item(1);
 			int index= 0;
 			ArrayList<Coche> a= new ArrayList<Coche>();
-			while (index < listaCoches.getLength()) {
+			while (((Element) listaCoches.item(index)).getElementsByTagName("numPuertas").item(0).getTextContent() != null) {
 				Node nodo= listaCoches.item(index);
 				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
 					Element elemento = (Element) nodo;
