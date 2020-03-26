@@ -24,7 +24,21 @@ public class Main {
 			}
 		} while(ask != 5);
 	}
-	
+	private static void connect() {
+		String dbURL = "jdbc:mysql://localhost:3306/concesionario";
+		String username = "root";
+		String password = "root";
+		try {
+		    Connection connection = DriverManager.getConnection(dbURL, username, password);
+		    if (connection != null) {
+		    	System.out.println("Conexion establecida, bienvenido.");        
+		    }
+		}
+		catch (SQLException ex) {
+			System.out.println("Error en la conexion");
+		    ex.printStackTrace();
+		}
+	}
 	private static void stockDisplay() {
 		
 	}
@@ -43,6 +57,6 @@ public class Main {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		menu();
+		connect();
 	}
 }
