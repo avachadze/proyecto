@@ -1,18 +1,15 @@
 package connections;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import java.io.*;
+import java.util.*;
+import org.jdom2.*;
+import org.jdom2.input.SAXBuilder;
+
 import data.*;
 
 public class XMLInOut {
 	
+	private static File archivo= new File("/Users/charli/Desktop/carpetos y exes/eclipse/provisional/resources/DatosVehiculos.xml");
 	
 	/**
 	 * Método usado para modular la creación de coches y camiones, creando un objeto de tipo vehiculo con los datos que coinciden entre ambos tipos.
@@ -24,14 +21,14 @@ public class XMLInOut {
 		int numAsientos, añoFabricacion;
 		double precio;
 		
-		matricula= elemento.getElementsByTagName("matricula").item(0).getTextContent();
-		numBastidor= elemento.getElementsByTagName("numBastidor").item(0).getTextContent();
-		color= elemento.getElementsByTagName("color").item(0).getTextContent();
-		numAsientos= Integer.parseInt(elemento.getElementsByTagName("numAsientos").item(0).getTextContent());
-		precio= Double.parseDouble(elemento.getElementsByTagName("precio").item(0).getTextContent());
-		añoFabricacion= Integer.parseInt(elemento.getElementsByTagName("añoFabricacion").item(0).getTextContent());
-		marca= elemento.getElementsByTagName("marca").item(0).getTextContent();
-		modelo= elemento.getElementsByTagName("modelo").item(0).getTextContent();
+		matricula= elemento.getChild("matricula").getText();
+		numBastidor= elemento.getChild("numBastidor").getText();
+		color= elemento.getChild("color").getText();
+		numAsientos= Integer.parseInt(elemento.getChild("numAsientos").getText());
+		precio= Double.parseDouble(elemento.getChild("precio").getText());
+		añoFabricacion= Integer.parseInt(elemento.getChild("añoFabricacion").getText());
+		marca= elemento.getChild("marca").getText();
+		modelo= elemento.getChild("modelo").getText();
 		
 		Vehiculo vehiculo= new Vehiculo(matricula, numBastidor, color, numAsientos, precio, añoFabricacion, marca, modelo);
 		return vehiculo;
@@ -45,56 +42,43 @@ public class XMLInOut {
 		Coche coche= null;
 		Camion camion= null;
 		try {
-			File archivo= new File("/Users/charli/Desktop/carpetos y exes/eclipse/provisional/resources/DatosVehiculos.xml");
-			DocumentBuilderFactory dbf= DocumentBuilderFactory.newInstance();
-			DocumentBuilder db= dbf.newDocumentBuilder();
-			Document documento= db.parse(archivo);
-			
-			documento.getDocumentElement().normalize();
-			NodeList listaVehiculos= documento.getElementsByTagName("vehiculos");
-			NodeList listaCoches= (NodeList)listaVehiculos.item(0);
-			NodeList listaCamiones= (NodeList)listaVehiculos.item(1);
+			SAXBuilder db= new SAXBuilder();
+			Document documento= db.build(archivo);
+
+			Element root= documento.getRootElement();
+			List<Element> listaVehiculos= root.getChildren();
 			int index= 0;
-			ArrayList<Coche> a= new ArrayList<Coche>();
-			while (((Element) listaCoches.item(index)).getElementsByTagName("numPuertas").item(0).getTextContent() != null) {
-				Node nodo= listaCoches.item(index);
-				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-					Element elemento = (Element) nodo;
+			while (index < listaVehiculos.size()) {
+				Element vehiculoActual= listaVehiculos.get(index);
+		
+				Vehiculo v= datosGenerales(vehiculoActual);
+				
+				if (vehiculoActual.getChild("tipo").getText().equals("camion")) {
 					
-					Vehiculo v1= datosGenerales(elemento);
+				//Datos especificos de Camion
+				float carga;
+				String tipoMercancia;
+				
+				carga= Float.parseFloat(vehiculoActual.getChild("carga").getText());
+				tipoMercancia= vehiculoActual.getChild("tipoMercarcia").getValue();
+				
+				camion= new Camion(v.getMatricula(), v.getNumBastidor(), v.getColor(), v.getNumAsientos(), v.getPrecio(), carga, tipoMercancia.charAt(0), v.getAñoFabricacion(), v.getMarca(), v.getModelo());
+				
+				camion.mostrarDatos();
+				
+				} else {
 					
-					//Datos especificos de Coche
-					int numPuertas, capacidadMaletero;
-					
-					numPuertas= Integer.parseInt(elemento.getElementsByTagName("numPuertas").item(0).getTextContent());
-					capacidadMaletero= Integer.parseInt(elemento.getElementsByTagName("capacidadMaletero").item(0).getTextContent());
-					
-					coche= new Coche(v1.getMatricula(), v1.getNumBastidor(), v1.getColor(), v1.getNumAsientos(), v1.getPrecio(), numPuertas, capacidadMaletero, v1.getAñoFabricacion(), v1.getMarca(), v1.getModelo());
-					
-					coche.mostrarDatos();
+				//Datos especificos de Coche
+				int numPuertas, capacidadMaletero;
+				
+				numPuertas= Integer.parseInt(vehiculoActual.getChild("numPuertas").getText());
+				capacidadMaletero= Integer.parseInt(vehiculoActual.getChild("capacidadMaletero").getText());
+				
+				coche= new Coche(v.getMatricula(), v.getNumBastidor(), v.getColor(), v.getNumAsientos(), v.getPrecio(), numPuertas, capacidadMaletero, v.getAñoFabricacion(), v.getMarca(), v.getModelo());
+				
+				coche.mostrarDatos();
 				}
-				index++;
-			}
-			index= 0;
-			ArrayList<Camion> b= new ArrayList<Camion>();
-			while (index < listaCamiones.getLength()) {
-				Node nodo= listaCamiones.item(index);
-				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-					Element elemento = (Element) nodo;
-					
-					Vehiculo v2= datosGenerales(elemento);
-					
-					//Datos especificos de Camion
-					float carga;
-					String tipoMercancia;
-					
-					carga= Float.parseFloat(elemento.getElementsByTagName("carga").item(0).getTextContent());
-					tipoMercancia= elemento.getElementsByTagName("tipoMercancia").item(0).getTextContent();
-					
-					camion= new Camion(v2.getMatricula(), v2.getNumBastidor(), v2.getColor(), v2.getNumAsientos(), v2.getPrecio(), carga, tipoMercancia.charAt(0), v2.getAñoFabricacion(), v2.getMarca(), v2.getModelo());
-					
-					camion.mostrarDatos();
-				}
+				
 				index++;
 			}
 		} catch (FileNotFoundException e) {
@@ -103,10 +87,13 @@ public class XMLInOut {
 			System.out.println("Fallo en el proceso de lectura");
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public static void exportar() {
-		
+		try {
+			FileInputStream fis = new FileInputStream(archivo);
+		} catch (IOException e) {
+			System.out.println("Fallo al exportar a xml");
+		}
 	}
 }
