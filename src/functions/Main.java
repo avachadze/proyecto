@@ -30,12 +30,15 @@ public class Main {
 	private  void stockDisplay() {
 		
 		try {
-		String query = "SELECT * FROM serie,vehiculos,coches,camiones";
+		String query = "SELECT v.*, s.codigoSerie,s.marca,s.modelo,s.añofabricacion,ca.*,c.*\r\n" + 
+				"FROM vehiculos v, camiones ca,coches c, serie s\r\n" + 
+				"WHERE v.matricula=ca.matricula && v.codigoSerie=s.codigoSerie";
+		
 		rs = st.executeQuery(query);
 			
 			while (rs.next()) {
-				
-				String marca = rs.getString("marca");	
+				System.out.println("hola");
+				String marca = rs.getString("s.marca");	
 				String modelo = rs.getString("modelo");	
 				String fabricacion = rs.getString("añoFabricacion");	
 				String matricula = rs.getString("matricula");
@@ -43,15 +46,13 @@ public class Main {
 				String color = rs.getString("color");	
 				String tipo = rs.getString("tipo");	
 				String asientos = rs.getString("numAsientos");
-				float precio = rs.getFloat("precio");
-				String serie = rs.getString("codigoSerie");	
+				String precio = rs.getString("precio");
+				String serie = rs.getString("s.codigoSerie");	
 				String carga = rs.getString("carga");
 				String mercancia = rs.getString("tipoMercancia");
 				String puertas = rs.getString("numPuertas");
 				String capacidad = rs.getString("capacidadMaletero");
-				
-		;
-				
+							
 				System.out.println("-----------\nSerie - " + serie  +
 								   "\nMarca - " + marca + 
 								   "\nModelo - " + modelo +
@@ -70,11 +71,12 @@ public class Main {
 				}
 				else {
 					System.out.println("puertas - " + puertas + 
-									   "\nCapacidad - " + capacidad+"\n");
+									  "\nCapacidad - " + capacidad+"\n");
 				}
 			}
-		}catch(Exception ex){
-			ex.getStackTrace();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
 		}finally {
 			try {
 				con.close();
@@ -102,29 +104,12 @@ public class Main {
 			}
 		} while(ask != 5);
 	}
-	private static void connect() {
-		String dbURL = "jdbc:mysql://localhost:3306/concesionario";
-		String username = "root";
-		String password = "root";
-		try {
-		    java.sql.Connection connection = DriverManager.getConnection(dbURL, username, password);
-		    if (connection != null) {
-		    	System.out.println("Conexion establecida, bienvenido.");        
-		    }
-		}
-		catch (SQLException ex) {
-			System.out.println("Error en la conexion");
-		    ex.printStackTrace();
-		}
-	}
+
 
 	
 	private  void pintado() {
 		stockDisplay();
 		System.out.println("Serie del coche a pintar ");
-		
-		
-		
 	}
 	
 	private  void venta() {
@@ -134,24 +119,81 @@ public class Main {
 	private  void compra() {
 		System.out.println("Que tipo de mercancia quiere comprar?");
 		String respuesta = Console.readString();
+		
+		//marca
+		System.out.println("Marca:");
+		String marca = Console.readString();
+		//modelo
+		System.out.println("Modelo:");
+		String modelo = Console.readString();
+		//añoFabricacion
+		System.out.println("Año Fabricacion:");
+		String fabric = Console.readString();
+		//matricula
 		System.out.println("Matricula: ");
 		String matricula = Console.readString();
-		System.out.println("Numero de puertas: ");
-		int numPuertas = Console.readInt();
-		System.out.println("Capacidad maletero: ");
-		int capacidadMaletero = Console.readInt();
-		System.out.println("Numero de serie - ");
-		int serie = Console.readInt();
+		//numBastidor
+		System.out.println("Numero Bastidor: ");
+		String bastidor = Console.readString();
+		//color
+		System.out.println("Color: ");
+		String color = Console.readString();
+		//numAsientos
+		System.out.println("Numero de asientos:");
+		String asientos = Console.readString();
+		//precio
+		System.out.println("Precio:");
+		String precio = Console.readString();
+
+		
 		
 		if (respuesta.equalsIgnoreCase("coche")) {
-			String query = "insert into coches (matricula, numAsientos, capacidadmaletero) VALUES (1,2,3)";
+			
+			//numPuertas
+			System.out.println("Numero de puertas:");
+			String puertas = Console.readString();
+			//capacidadMaletero
+			System.out.println("Capacidad Maletero:");
+			String maletero = Console.readString();
+	
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					con = DriverManager.getConnection("jdbc:mysql://localhost:3306/concesionario", "root", "root");
+					st = con.createStatement();
+					String query = "INSERT INTO coches (matricula,numPuertas,maletero) VALUES ('"+matricula+"','"+puertas+"','"+maletero+"')";
+					String query2 = "INSERT INTO serie(marca,modelo,añoFabricacion) VALUES ('"+marca+"','"+modelo+"','"+fabric+"')";
+					String query3 = "INSERT INTO Vehiculos (matricula,numBastidor,color,tipo,numAsientos,precio,codigoSerie) VALUES ('"+matricula+"''"+bastidor+"','"+color+"', '"+asientos+"','"+ precio+"')";
+					
+					st.executeUpdate(query);
+					st.executeUpdate(query2);
+					st.executeUpdate(query3);
+					System.out.println("Un nuevo coche insertado");
+				} catch (Exception e) {
+					System.out.println("Error!");
+				}
+
+		}
+		else {
+			//carga
+			System.out.println("Carga: ");
+			String carga = Console.readString();
+			//tipoMercancia
+			
+			System.out.println("Tipo de mercancia: ");
+			String mercancia = Console.readString();
+			String query2 = "insert into serie(marca,modelo,añoFabricacion) VALUES (?,?,?)";
+			String query3 = "insert into Vehiculos (matricula,numBastidor,color,tipo,numAsientos,precio,codigoSerie) VALUES (?,?,?,?,?,?,?)";
+			String query = "insert into camiones (matricula,numPuertas,maletero) VALUES (?,?,?)";
+			
+			
+			System.out.println("Un nuevo vehiculo insertado");
+			System.out.println("Un nuevo camion insertado");
 		}
 		
 	}
-	
 	public static void main(String[] args) {
+		Main test = new Main();
+		test.menu();
 		
-		Main hola = new Main();
-		hola.menu();
 	}
 }
